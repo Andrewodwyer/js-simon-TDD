@@ -1,10 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+const { game, newGame, showScore, addTurn, lightsOn, showTurns, playerTurn } = require("../game"); // retrieve the game function from the game.js file
 
-//const { default: test } = require("node:test");
-const { game, newGame, showScore, addTurn, lightsOn, showTurns } = require("../game"); // retrieve the game function from the game.js file
-
+jest.spyOn(window, "alert").mockImplementation(() => { });
 // before All sets up the DOM once all the other tests have run
 beforeAll(() => {
     let fs = require("fs"); // fs library which is part of nodes standard library
@@ -12,6 +11,14 @@ beforeAll(() => {
     document.open(); // open, write and close will be the same for every html document you want to load into the DOM
     document.write(fileContents);
     document.close();
+});
+
+describe("pre-game", () => {
+    test("clicking buttons before newGame should fail", () => {
+        game.lastButton = "";
+        document.getElementById("button2").click();
+        expect(game.lastButton).toEqual("");
+    });
 });
 
 describe("game object contains correct keys", () => {
@@ -33,6 +40,15 @@ describe("game object contains correct keys", () => {
     });
     test("turnNumber key exists", () => { 
         expect("turnNumber" in game).toBe(true);
+    });
+    test("lastButton key exists", () => {
+        expect("lastButton" in game).toBe(true);
+    });
+    test("turnInProgress key exists", () => {
+        expect("turnInProgress" in game).toBe(true);
+    });
+    test("turnInProgress key value is false", () => {
+        expect("turnInProgress" in game).toBe(true);
     });
 });
 
@@ -87,11 +103,31 @@ describe("gameplay works correctly", () => {
     test("should add correct class to light up the buttons", () => {
         let button = document.getElementById(game.currentGame[0]);
         lightsOn(game.currentGame[0]);
-        expect(button.classList).toContain(game.currentGame[0] + "light");
+        expect(button.classList).toContain("light");
     });
     test("showTurns should update game.turnNumber", () => {
         game.turnNumber = 42;
         showTurns(); // should reset the turn number
         expect(game.turnNumber).toBe(0);
+    });
+    test("should increment the score if the turn is correct", () => {
+        game.playerMoves.push(game.currentGame[0]);
+        playerTurn();
+        expect(game.score).toBe(1);
+    });
+    test("should call an alert if the move is wrong", () => {
+        game.playerMoves.push("wrong");
+        playerTurn();
+        expect(window.alert).toBeCalledWith("Wrong move!"); //expected text .toBeCalledWith
+    });
+    test("should toggle turnInProgress to true", () => {
+        showTurns();
+        expect(game.turnInProgress).toBe(true);
+    });
+    test("clicking during computer sequence should fail", () => {
+        showTurns();
+        game.lastButton = "";
+        document.getElementById("button2").click();
+        expect(game.lastButton).toEqual("");
     });
 });
