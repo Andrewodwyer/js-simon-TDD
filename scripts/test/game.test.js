@@ -56,7 +56,15 @@ describe("newGame works correctly", () => {
     test("should add one move to the computer's game array", () => {
         expect(game.currentGame.length).toBe(1);
     });
+    test("expect data-listener to be true", () => {
+        newGame();
+        const elements = document.getElementsByClassName("circle");
+        for (let element of elements) {
+            expect(element.getAttribute("data-listener")).toEqual("true"); // data-listener attribe is equal to true
+        }
+    });
 });
+
 // describe is a block
 //beforeAll run before all the test are run, beforeEach runs before each of the tests are run
 describe("gameplay works correctly", () => {
@@ -77,9 +85,9 @@ describe("gameplay works correctly", () => {
         expect(game.currentGame.length).toBe(2);
     });
     test("should add correct class to light up the buttons", () => {
-        let button = document.getElementById(game.currentGame[0]); // [0] is the first element in the currentGame array
+        let button = document.getElementById(game.currentGame[0]);
         lightsOn(game.currentGame[0]);
-        expect(button.classList).toContain(game.currentGame[0] + "light"); // .toContain is a new jest matcher. the button classlist contains the light class
+        expect(button.classList).toContain(game.currentGame[0] + "light");
     });
     test("showTurns should update game.turnNumber", () => {
         game.turnNumber = 42;
