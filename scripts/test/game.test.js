@@ -3,7 +3,7 @@
  */
 
 //const { default: test } = require("node:test");
-const { game, newGame, showScore } = require("../game"); // retrieve the game function from the game.js file
+const { game, newGame, showScore, addTurn } = require("../game"); // retrieve the game function from the game.js file
 
 // before All sets up the DOM once all the other tests have run
 beforeAll(() => {
@@ -50,7 +50,8 @@ describe("newGame works correctly", () => {
     test("should clear the player moves array", () => {
         expect(game.playerMoves.length).toBe(0); // check if the lenght of the array is now 0
     });
-    test("should clear the computer sequence array", () => {
-        expect(game.currentGame.length).toBe(0);
+    test("should add one move to the computer's game array", () => {
+        expect(game.currentGame.length).toBe(1);
     });
 });
+
