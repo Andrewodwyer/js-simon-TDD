@@ -3,7 +3,7 @@
  */
 
 //const { default: test } = require("node:test");
-const { game, newGame, showScore, addTurn, lightsOn } = require("../game"); // retrieve the game function from the game.js file
+const { game, newGame, showScore, addTurn, lightsOn, showTurns } = require("../game"); // retrieve the game function from the game.js file
 
 // before All sets up the DOM once all the other tests have run
 beforeAll(() => {
@@ -31,6 +31,9 @@ describe("game object contains correct keys", () => {
         //jest .toEqual matcher method
         expect(game.choices).toEqual(["button1", "button2", "button3", "button4"])  // game.choices, we are picking out the choices key from our game object. we expect the array to have the values of button1 etc
     });
+    test("turnNumber key exists", () => { 
+        expect("turnNumber" in game).toBe(true);
+    });
 });
 
 describe("newGame works correctly", () => {
@@ -54,7 +57,7 @@ describe("newGame works correctly", () => {
         expect(game.currentGame.length).toBe(1);
     });
 });
-
+// describe is a block
 //beforeAll run before all the test are run, beforeEach runs before each of the tests are run
 describe("gameplay works correctly", () => {
     beforeEach(() => {
@@ -77,5 +80,10 @@ describe("gameplay works correctly", () => {
         let button = document.getElementById(game.currentGame[0]); // [0] is the first element in the currentGame array
         lightsOn(game.currentGame[0]);
         expect(button.classList).toContain(game.currentGame[0] + "light"); // .toContain is a new jest matcher. the button classlist contains the light class
+    });
+    test("showTurns should update game.turnNumber", () => {
+        game.turnNumber = 42;
+        showTurns(); // should reset the turn number
+        expect(game.turnNumber).toBe(0);
     });
 });
