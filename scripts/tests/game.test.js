@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+//const { default: test } = require("node:test");
 const { game } = require("../game"); // retrieve the game function from the game.js file
 
 // before All sets up the DOM once all the other tests have run
@@ -25,5 +26,9 @@ describe("game object contains correct keys", () => {
     });
     test("choices key exists", () => { 
         expect("choices" in game).toBe(true);
+    });
+    test("choices contain correct ids", () => {
+        //jest .toEqual matcher method
+        expect(game.choices).toEqual(["button1", "button2", "button3", "button4"])  // game.choices, we are picking out the choices key from our game object. we expect the array to have the values of button1 etc
     });
 });
