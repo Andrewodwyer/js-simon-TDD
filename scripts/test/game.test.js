@@ -3,7 +3,7 @@
  */
 
 //const { default: test } = require("node:test");
-const { game, newGame, showScore, addTurn } = require("../game"); // retrieve the game function from the game.js file
+const { game, newGame, showScore, addTurn, lightsOn } = require("../game"); // retrieve the game function from the game.js file
 
 // before All sets up the DOM once all the other tests have run
 beforeAll(() => {
@@ -55,3 +55,27 @@ describe("newGame works correctly", () => {
     });
 });
 
+//beforeAll run before all the test are run, beforeEach runs before each of the tests are run
+describe("gameplay works correctly", () => {
+    beforeEach(() => {
+        game.score = 0;
+        game.currentGame = []; // reset the array each time
+        game.playerMoves = [];
+        addTurn(); // run add turn function to add a new turn to the current game array
+    });
+    // afterEach
+    afterEach(() => {
+        game.score = 0;
+        game.currentGame = [];
+        game.playerMoves = [];
+    });
+    test("addTurn adds a new turn to the game", () => {
+        addTurn(); // addTurn adds a new turn to the array, test to check if the array is now 2
+        expect(game.currentGame.length).toBe(2);
+    });
+    test("should add correct class to light up the buttons", () => {
+        let button = document.getElementById(game.currentGame[0]); // [0] is the first element in the currentGame array
+        lightsOn(game.currentGame[0]);
+        expect(button.classList).toContain(game.currentGame[0] + "light"); // .toContain is a new jest matcher. the button classlist contains the light class
+    });
+});
